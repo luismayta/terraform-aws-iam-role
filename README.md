@@ -12,7 +12,7 @@
 
   -->
 
-[![Latest Release](https://img.shields.io/github/release/hadenlabs/terraform-aws-iam-role)](https://github.com/hadenlabs/terraform-aws-iam-role/releases) [![Lint](https://img.shields.io/github/workflow/status/hadenlabs/terraform-aws-iam-role/lint-code)](https://github.com/hadenlabs/terraform-aws-iam-role/actions?workflow=lint-code) [![CI](https://img.shields.io/github/workflow/status/hadenlabs/terraform-aws-iam-role/ci)](https://github.com/hadenlabs/terraform-aws-iam-role/actions?workflow=ci) [![Test](https://img.shields.io/github/workflow/status/hadenlabs/terraform-aws-iam-role/test)](https://github.com/hadenlabs/terraform-aws-iam-role/actions?workflow=test) [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit) [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow)](https://conventionalcommits.org) [![KeepAChangelog](https://img.shields.io/badge/changelog-Keep%20a%20Changelog%20v1.0.0-orange)](https://keepachangelog.com) [![Terraform Version](https://img.shields.io/badge/terraform-1.x%20|%200.15%20|%200.14%20|%200.13%20|%200.12.20+-623CE4.svg?logo=terraform)](https://github.com/hashicorp/terraform/releases)
+[![Latest Release](https://img.shields.io/github/release/hadenlabs/terraform-aws-iam-role)](https://github.com/hadenlabs/terraform-aws-iam-role/releases) [![Lint](https://img.shields.io/github/workflow/status/hadenlabs/terraform-aws-iam-role/lint-code)](https://github.com/hadenlabs/terraform-aws-iam-role/actions?workflow=lint-code) [![CI](https://img.shields.io/github/workflow/status/hadenlabs/terraform-aws-iam-role/ci)](https://github.com/hadenlabs/terraform-aws-iam-role/actions?workflow=ci) [![Test](https://img.shields.io/github/workflow/status/hadenlabs/terraform-aws-iam-role/test)](https://github.com/hadenlabs/terraform-aws-iam-role/actions?workflow=test) [![pre-commit](https://img.shields.io/badge/pre--commit-enabled-brightgreen?logo=pre-commit&logoColor=white)](https://github.com/pre-commit/pre-commit) [![Conventional Commits](https://img.shields.io/badge/Conventional%20Commits-1.0.0-yellow)](https://conventionalcommits.org) [![KeepAChangelog](https://img.shields.io/badge/changelog-Keep%20a%20Changelog%20v1.0.0-orange)](https://keepachangelog.com) [![Terraform Version](https://img.shields.io/badge/terraform-1.x%20|%200.15%20|%200.14%20|%200.13%20|%200.12.20+-623CE4.svg?logo=terraform)](https://github.com/hashicorp/terraform/releases) [![AWS Provider Version](https://img.shields.io/badge/AWS-3%20and%202.0+-F8991D.svg?logo=terraform)](https://github.com/terraform-providers/terraform-provider-aws/releases)
 
 # terraform-aws-iam-role
 
@@ -24,6 +24,7 @@ This is a list of plugins that need to be installed previously to enjoy all the 
 
 - [gomplate](https://github.com/hairyhenderson/gomplate)
 - [terraform](https://github.com/hashicorp/terraform)
+- [python](https://www.python.org)
 - [taskfile](https://github.com/go-task/task)
 
 ## Usage
@@ -57,35 +58,73 @@ module "main" {
 }
 ```
 
- <!-- BEGIN_TF_DOCS -->
+ <!-- markdown-link-check-disable -->
+<!-- BEGIN_TF_DOCS -->
 
 ## Requirements
 
-| Name                                                                     | Version           |
-| ------------------------------------------------------------------------ | ----------------- |
-| <a name="requirement_terraform"></a> [terraform](#requirement_terraform) | >= 0.12.20, < 2.0 |
+| Name      | Version           |
+| --------- | ----------------- |
+| terraform | >= 0.12.20, < 2.0 |
+| aws       | >= 2.51, < 4.0    |
 
 ## Providers
 
-No providers.
+| Name | Version        |
+| ---- | -------------- |
+| aws  | >= 2.51, < 4.0 |
 
 ## Modules
 
-No modules.
+| Name | Source              | Version |
+| ---- | ------------------- | ------- |
+| tags | hadenlabs/tags/null | >=0.2   |
 
 ## Resources
 
-No resources.
+| Name | Type |
+| --- | --- |
+| [aws_iam_instance_profile.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_instance_profile) | resource |
+| [aws_iam_policy.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_policy) | resource |
+| [aws_iam_role.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role) | resource |
+| [aws_iam_role_policy_attachment.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/resources/iam_role_policy_attachment) | resource |
+| [aws_iam_policy_document.assume_role](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.assume_role_aggregated](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
+| [aws_iam_policy_document.this](https://registry.terraform.io/providers/hashicorp/aws/latest/docs/data-sources/iam_policy_document) | data source |
 
 ## Inputs
 
-No inputs.
+| Name | Description | Type | Default | Required |
+| --- | --- | --- | --- | :-: |
+| assume_role_actions | The IAM action to be granted by the AssumeRole policy | `list(string)` | <pre>[<br> "sts:AssumeRole",<br> "sts:TagSession"<br>]</pre> | no |
+| enabled | Set to false to prevent the module from creating any resources | `bool` | `true` | no |
+| instance_profile_enabled | Create EC2 Instance Profile for the role | `bool` | `false` | no |
+| max_session_duration | The maximum session duration (in seconds) for the role. Can have a value from 1 hour to 12 hours | `number` | `3600` | no |
+| name | Bucket name. If provided, the bucket will be created with this name instead of generating the name from the context | `string` | n/a | yes |
+| namespace | ID element. Usually an abbreviation of your organization name, e.g. 'eg' or 'cp', to help ensure generated IDs are globally unique | `string` | `null` | no |
+| permissions_boundary | ARN of the policy that is used to set the permissions boundary for the role | `string` | `""` | no |
+| policy_description | The description of the IAM policy that is visible in the IAM policy manager | `string` | `""` | no |
+| policy_documents | List of JSON IAM policy documents | `list(string)` | `[]` | no |
+| principals | Map of service name as key and a list of ARNs to allow assuming the role as value (e.g. map(`AWS`, list(`arn:aws:iam:::role/admin`))) | `map(list(string))` | n/a | yes |
+| role_description | The description of the IAM role that is visible in the IAM role manager | `string` | n/a | yes |
+| stage | ID element. Usually used to indicate role, e.g. 'prod', 'staging', 'source', 'build', 'test', 'deploy', 'release' | `string` | `null` | no |
+| tags | Additional tags (e.g. `map('BusinessUnit','XYZ')` | `map(string)` | `{}` | no |
+| use_fullname | If set to 'true' then the full ID for the IAM role name (e.g. `[var.namespace]-[var.stage]-[var.name]`) will be used. | `bool` | `false` | no |
 
 ## Outputs
 
-No outputs.
+| Name             | Description                                                                            |
+| ---------------- | -------------------------------------------------------------------------------------- |
+| arn              | The Amazon Resource Name (ARN) specifying the role                                     |
+| enabled          | Enabled property of module                                                             |
+| id               | The stable and unique string identifying the role                                      |
+| instance_profile | Name of the ec2 profile (if enabled)                                                   |
+| name             | The name of the IAM role created                                                       |
+| policy           | Role policy document in json format. Outputs always, independent of `enabled` variable |
+| use_fullname     | return if enabled use fullname                                                         |
 
 <!-- END_TF_DOCS -->
+<!-- markdown-link-check-enable -->
 
 ## Help
 

@@ -7,7 +7,7 @@ import (
 )
 
 func Generator() {
-	_ = fakerTag.AddProvider("userNameFaker", func(v reflect.Value) (interface{}, error) {
-		return User().Name(), nil
+	_ = fakerTag.AddProvider("ServerNameFaker", func(v reflect.Value) (interface{}, error) {
+		return Server().Name(), nil
 	})
 }

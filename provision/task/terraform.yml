@@ -21,7 +21,7 @@ tasks:
       - task: check
     cmds:
       - >-
-        terraform-docs markdown ./ --output-file=docs/include/terraform.md --output-mode=replace
+        terraform-docs ./ --config=.ci/config/.terraform-docs.yml
 
   docs:all:
     desc: generate docs using docs all

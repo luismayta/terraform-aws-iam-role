@@ -13,7 +13,6 @@ includes:
   plantuml: ./provision/task/plantuml.yml
   prettier: ./provision/task/prettier.yml
   sonar: ./provision/task/sonar.yml
-  ssh: ./provision/task/ssh.yml
   diagrams: ./provision/diagrams/Taskfile.yml
   terraform: ./provision/task/terraform.yml
 
@@ -96,14 +95,21 @@ tasks:
         --out {{.README_FILE}}
         --datasource config={{.README_YAML}}
         --datasource includes={{.README_INCLUDES}}
-      - task: prettier
       - task: terraform:docs:all
+      - task: prettier
 
   prettier:
     run: once
     desc: Execute prettier files
     cmds:
       - task: prettier:all
+
+  upgrade:
+    run: once
+    desc: Execute upgrade packages
+    cmds:
+      - >-
+        pipenv run pre-commit autoupdate
 
   setup:
     desc: Setup dependences of project
