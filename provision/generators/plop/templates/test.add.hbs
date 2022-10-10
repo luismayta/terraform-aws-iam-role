@@ -1,28 +1,43 @@
 package test
 
 import (
+	"fmt"
 	"testing"
 
 	"github.com/gruntwork-io/terratest/modules/terraform"
-
-	"github.com/hadenlabs/terraform-aws-iam-role/config"
 	"github.com/stretchr/testify/assert"
-	"github.com/hadenlabs/terraform-aws-iam-role/internal/common/log"
+
+	"github.com/hadenlabs/terraform-aws-iam-role/internal/app/external/faker"
+	"github.com/hadenlabs/terraform-aws-iam-role/internal/testutil"
 )
 
 func Test{{pascalCase testName}}Success(t *testing.T) {
 	t.Parallel()
-	conf := config.Must()
-	logger := log.Factory(*conf)
-	logger.Debugf(
-		"values for test terraform-aws-iam-role is",
-	)
+
+	tags := map[string]interface{}{
+		"tag1": "tags1",
+	}
+	namespace := testutil.Company
+	stage := testutil.Stage
+	name := faker.Bucket().Name()
+	enabled := true
+	useFullName := true
+	policyDescription := "Allow Basic"
+	roleDescription := "IAM role with permissions to basic"
 
 	terraformOptions := &terraform.Options{
 		// The path to where your Terraform code is located
-        TerraformDir: "replace-name-{{dashCase testName}}",
+        TerraformDir: "role-{{dashCase testName}}",
 		Upgrade:      true,
 		Vars: map[string]interface{}{
+			"namespace":          namespace,
+			"stage":              stage,
+			"name":               name,
+			"use_fullname":       useFullName,
+			"enabled":            enabled,
+			"tags":               tags,
+			"policy_description": policyDescription,
+			"role_description":   roleDescription,
 		},
 	}
 
