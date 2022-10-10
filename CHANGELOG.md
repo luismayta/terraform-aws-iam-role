@@ -10,6 +10,7 @@ All notable changes to this project will be documented in this file. This file u
 
 ### Bug Fixes
 
+* github actions test ([#9](https://github.com/hadenlabs/terraform-aws-iam-role/issues/9))
 * sync confluence github actions ([#8](https://github.com/hadenlabs/terraform-aws-iam-role/issues/8))
 * generator version ([#7](https://github.com/hadenlabs/terraform-aws-iam-role/issues/7))
 
