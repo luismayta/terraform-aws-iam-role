@@ -1,0 +1,39 @@
+variable "namespace" {
+  type        = string
+  default     = null
+  description = "ID element. Usually an abbreviation of your organization name, e.g. 'eg' or 'cp', to help ensure generated IDs are globally unique"
+}
+
+variable "stage" {
+  type        = string
+  default     = null
+  description = "ID element. Usually used to indicate role, e.g. 'prod', 'staging', 'source', 'build', 'test', 'deploy', 'release'"
+}
+
+variable "name" {
+  type        = string
+  description = "Bucket name. If provided, the bucket will be created with this name instead of generating the name from the context"
+}
+
+variable "tags" {
+  type        = map(string)
+  description = "Additional tags (e.g. `map('BusinessUnit','XYZ')`"
+  default     = {}
+}
+
+variable "enabled" {
+  type        = bool
+  default     = true
+  description = "Set to false to prevent the module from creating any resources"
+}
+
+variable "role_description" {
+  type        = string
+  description = "The description of the IAM role that is visible in the IAM role manager"
+}
+
+variable "policy_description" {
+  type        = string
+  default     = ""
+  description = "The description of the IAM policy that is visible in the IAM policy manager"
+}
